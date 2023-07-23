@@ -8,8 +8,10 @@ public class Char : MonoBehaviour
     public float Speed = 5f;
     public float SSpeed = 10f;
     public float Jump = 7f;
-    public float hurt = 600f;
+    public float hurt = 200f;
+    public float wall = 5f;
     public bool gc = false;
+    public bool wc = false;
     public bool GroundTouch = false;
     public Text countText;
     public Text winText;
@@ -19,6 +21,7 @@ public class Char : MonoBehaviour
     void Start()
     {
         gc = true;
+        wc = true;
         count = 0;
         SetCountText();
     }
@@ -46,14 +49,19 @@ public class Char : MonoBehaviour
         {
             transform.position += Vector3.right * Time.deltaTime * Speed;
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && GroundTouch == true)
         {
-            transform.position += Vector3.up * Time.deltaTime * Jump;
+            transform.position += Vector3.up * Time.deltaTime * Jump ;
         }
         Vector3 gc = transform.TransformDirection(Vector3.down);
-        if (Physics.Raycast(transform.position, gc, .5f))
+        Vector3 wc = transform.TransformDirection(Vector3.forward);
+        if (Physics.Raycast(transform.position, gc, 0.5f))
         {
             GroundTouch = true;
+        }
+        if (Physics.Raycast(transform.position, wc, 0.4f))
+        {
+            transform.position += Vector3.back * Time.deltaTime * wall;
         }
     }
 
